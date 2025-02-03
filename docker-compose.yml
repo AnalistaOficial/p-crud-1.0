@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    volumes:
+      - volume_back:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    networks:
+      - mynetwork
+    ports:
+      - "5432:5432"
+
+  backend:
+    # build: 
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    image: image-python-back:latest
+    container_name: container-python-back
+    #volumes:
+    #  - ./backend:/app
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres/mydatabase
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - mynetwork
+
+  frontend:
+    # build: 
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
+    image: image-python-front:latest
+    container_name: container-python-front
+    volumes:
+      - volume_front:/app
+    ports:
+      - "8501:8501"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    name: mynetwork
+
+volumes:
+  volume_back:
+  volume_front:
+    #external: true

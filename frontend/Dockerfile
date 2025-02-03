@@ -1,0 +1,19 @@
+# Dockerfile-frontend
+
+# Imagem base
+FROM python:3.13.1
+
+# Definir o diretório de trabalho no container
+WORKDIR /app
+
+# Copiar o restante dos arquivos do projeto
+COPY . /app
+
+# Copiar os arquivos de dependências e instalar
+#COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+
+
+# Comando para executar a aplicação
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+#CMD ["tail", "-f", "/dev/null"]
